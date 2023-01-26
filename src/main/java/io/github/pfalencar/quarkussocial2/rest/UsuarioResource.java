@@ -47,9 +47,15 @@ public class UsuarioResource {
     @PUT
     @Path("{id}")
     @Transactional
-    public Response updateUsuario(@PathParam("id") Long id, CreateUsuarioRequest usuarioRequest) {
-
-        return Response.ok().build();
+    public Response updateUsuario(@PathParam("id") Long id, CreateUsuarioRequest usuarioNovo) {
+        Usuario usuarioEncontrado = Usuario.findById(id);
+        if (usuarioEncontrado != null) {
+            usuarioEncontrado.setName(usuarioNovo.getName());
+            usuarioEncontrado.setAge(usuarioNovo.getAge());
+            usuarioEncontrado.persist();
+            return Response.ok(usuarioEncontrado).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
 }
