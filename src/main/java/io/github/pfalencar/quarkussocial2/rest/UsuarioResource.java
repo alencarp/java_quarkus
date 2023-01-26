@@ -31,5 +31,25 @@ public class UsuarioResource {
         PanacheQuery<Usuario> query = Usuario.findAll();
         return Response.ok(query.list()).build();
     }
+    @DELETE
+    @Path("{id}")
+    @Transactional
+    public Response deleteUsuario(@PathParam("id") Long id){
+        Usuario usuarioEncontrado = Usuario.findById(id);
+
+        if (usuarioEncontrado != null) {
+            usuarioEncontrado.delete();
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+
+    }
+    @PUT
+    @Path("{id}")
+    @Transactional
+    public Response updateUsuario(@PathParam("id") Long id, CreateUsuarioRequest usuarioRequest) {
+
+        return Response.ok().build();
+    }
 
 }
