@@ -6,4 +6,13 @@ CREATE TABLE usuarios(
 	age integer not null
 )
 
-SELECT * FROM usuarios
+SELECT * FROM usuarios;
+
+CREATE TABLE posts (
+	id bigserial not null primary key,
+	post_text varchar(150) not null,
+    data_hora timestamp not null,
+    usuario_id bigint not null references usuarios(id)
+);
+
+SELECT * FROM posts;
