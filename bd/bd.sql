@@ -16,3 +16,10 @@ CREATE TABLE posts (
 );
 
 SELECT * FROM posts;
+
+CREATE TABLE followers (
+    id bigserial not null primary key,
+    usuario_id bigint not null references usuarios(id),
+    follower_id bigint not null references usuarios(id)
+);
+SELECT * FROM followers;
