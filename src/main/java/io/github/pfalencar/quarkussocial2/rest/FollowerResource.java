@@ -44,6 +44,7 @@ public class FollowerResource {
             //pego o usuário que tem o id que passei na requisição JSON (seguidor)
             Usuario usuarioQueVaiSeguir = usuarioRepository.findById(followerRequest.getFollowerId());
 
+            //verifico se o seguidor já está seguindo aquele usuário
             if (!followerRepository.follows(usuarioQueVaiSeguir, usuarioDaURL_queSeraSeguido)) {
                 Follower seguidor = new Follower();
                 seguidor.setUsuario(usuarioDaURL_queSeraSeguido);
