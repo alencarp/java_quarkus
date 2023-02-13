@@ -5,12 +5,16 @@ import io.github.pfalencar.quarkussocial2.domain.model.Usuario;
 import io.github.pfalencar.quarkussocial2.domain.repository.FollowerRepository;
 import io.github.pfalencar.quarkussocial2.domain.repository.UsuarioRepository;
 import io.github.pfalencar.quarkussocial2.rest.dto.FollowerRequest;
+import io.github.pfalencar.quarkussocial2.rest.dto.FollowerResponse;
+import io.github.pfalencar.quarkussocial2.rest.dto.FollowersPerUsuarioResponse;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/usuarios/{usuarioId}/followers")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -57,6 +61,43 @@ public class FollowerResource {
 
         return Response.status(Response.Status.NOT_FOUND).build();
 
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listFollowers(@PathParam("usuarioId") Long usuarioId) {
+
+        Usuario usuario = usuarioRepository.findById(usuarioId);
+        if (usuario == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        List<Follower> listaDeFollowersPorUsuario = followerRepository.findByUsuario(usuarioId);
+
+        var followersPerUsuarioResponse = new FollowersPerUsuarioResponse();
+
+        followersPerUsuarioResponse.setFollowersCount(listaDeFollowersPorUsuario.size());
+
+        //o map() vai mapear um objeto desta listaDeFollowersPorUsuario do tipo Follower para um FollowerResponse
+        List<FollowerResponse> followerList = listaDeFollowersPorUsuario.stream()
+                .map(FollowerResponse::new)
+                .collect(Collectors.toList());
+
+        //mapear a lista de follower para uma lista de FollowerResponse
+        followersPerUsuarioResponse.setContent(followerList);
+        return Response.ok(followersPerUsuarioResponse).build();
+    }
+
+    @DELETE
+    @Transactional
+    public Response unfollowUsuario(@PathParam("usuarioId") Long usuarioId, @QueryParam("followerId") Long followerId) {
+        //verificar se esse usuario existe:
+        Usuario usuarioById = usuarioRepository.findById(usuarioId);
+        if (usuarioById == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        followerRepository.deleteByFollowerAndUsuario(followerId, usuarioId);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
 }

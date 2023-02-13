@@ -1,7 +1,9 @@
 package io.github.pfalencar.quarkussocial2.rest;
 
+import io.github.pfalencar.quarkussocial2.domain.model.Follower;
 import io.github.pfalencar.quarkussocial2.domain.model.Post;
 import io.github.pfalencar.quarkussocial2.domain.model.Usuario;
+import io.github.pfalencar.quarkussocial2.domain.repository.FollowerRepository;
 import io.github.pfalencar.quarkussocial2.domain.repository.PostRepository;
 import io.github.pfalencar.quarkussocial2.domain.repository.UsuarioRepository;
 import io.github.pfalencar.quarkussocial2.rest.dto.CreatePostRequest;
@@ -25,9 +27,13 @@ public class PostResource {
     @Inject
     private UsuarioRepository usuarioRepository;
     private PostRepository postRepository;
-    public PostResource(UsuarioRepository usuarioRepository, PostRepository postRepository) {
+    private FollowerRepository followerRepository;
+
+    public PostResource(UsuarioRepository usuarioRepository, PostRepository postRepository, FollowerRepository followerRepository) {
         this.usuarioRepository = usuarioRepository;
         this.postRepository = postRepository;
+        this.followerRepository = followerRepository;
+
     }
     @POST
     @Transactional
@@ -52,11 +58,31 @@ public class PostResource {
         return Response.status(Response.Status.CREATED).build();
     }
     @GET
-    public Response listPosts(@PathParam("usuarioId") Long usuarioId){
+    public Response listPosts(@PathParam("usuarioId") Long usuarioId, @HeaderParam("followerId") Long followerId){
         Usuario usuario = usuarioRepository.findById(usuarioId);
         if (usuario == null){
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
+        if(followerId == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("You forgot sending followerId in Header")
+                    .build();
+        }
+
+        //um usuário só pode ver a lista de posts de um certo usuário, se aquele for seguidor deste:
+        Usuario usuarioSeguidor = usuarioRepository.findById(followerId);
+
+        if (usuarioSeguidor == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("followerId doesn't exist!").build();
+        }
+
+        boolean isFollower = followerRepository.follows(usuarioSeguidor, usuario);
+        if (!isFollower) {
+            return Response.status(Response.Status.FORBIDDEN).entity("You can't see these posts").build(); //403
+        }
+
         PanacheQuery<Post> postPanacheQuery = postRepository.find(
                 "usuario", Sort.by("dataTime", Sort.Direction.Descending),usuario);
         List<Post> listaDePosts = postPanacheQuery.list();

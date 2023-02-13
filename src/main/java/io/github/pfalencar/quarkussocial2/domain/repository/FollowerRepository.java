@@ -7,7 +7,6 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Parameters;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,10 +42,17 @@ public class FollowerRepository implements PanacheRepository<Follower> {
         return result.isPresent();
     }
 
-    public List<Follower> findByUser(Long usuarioId) {
-        find("usuario.id", usuarioId);
-        return null;
+    //traz a lista de seguidores daquele usuario
+    public List<Follower> findByUsuario(Long usuarioId) {
+        PanacheQuery<Follower> query = find("usuario.id", usuarioId);
+        return query.list();
     }
 
 
+    public void deleteByFollowerAndUsuario(Long followerId, Long usuarioId) {
+        Map<String, Object> mapParameters = Parameters.with("usuarioId", usuarioId)
+                .and("followerId", followerId)
+                .map();
+        delete("follower.id =:followerId and usuario.id =:usuarioId", mapParameters);
+    }
 }
