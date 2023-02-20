@@ -1,6 +1,5 @@
 package io.github.pfalencar.quarkussocial2.rest;
 
-import io.github.pfalencar.quarkussocial2.domain.model.Follower;
 import io.github.pfalencar.quarkussocial2.domain.model.Post;
 import io.github.pfalencar.quarkussocial2.domain.model.Usuario;
 import io.github.pfalencar.quarkussocial2.domain.repository.FollowerRepository;
@@ -16,7 +15,6 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,7 +78,8 @@ public class PostResource {
 
         boolean isFollower = followerRepository.follows(usuarioSeguidor, usuario);
         if (!isFollower) {
-            return Response.status(Response.Status.FORBIDDEN).entity("You can't see these posts").build(); //403
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity("You can't see these posts").build(); //403
         }
 
         PanacheQuery<Post> postPanacheQuery = postRepository.find(
