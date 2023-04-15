@@ -1,4 +1,4 @@
-package io.github.pfalencar.quarkussocial2.rest.dto;
+package io.github.pfalencar.quarkussocial2.rest.dto.response;
 
 import lombok.Data;
 

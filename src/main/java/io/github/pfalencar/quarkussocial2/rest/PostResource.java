@@ -5,8 +5,8 @@ import io.github.pfalencar.quarkussocial2.domain.model.Usuario;
 import io.github.pfalencar.quarkussocial2.domain.repository.FollowerRepository;
 import io.github.pfalencar.quarkussocial2.domain.repository.PostRepository;
 import io.github.pfalencar.quarkussocial2.domain.repository.UsuarioRepository;
-import io.github.pfalencar.quarkussocial2.rest.dto.CreatePostRequest;
-import io.github.pfalencar.quarkussocial2.rest.dto.PostResponse;
+import io.github.pfalencar.quarkussocial2.rest.dto.request.CreatePostRequest;
+import io.github.pfalencar.quarkussocial2.rest.dto.response.PostResponse;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Sort;
 

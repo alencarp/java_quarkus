@@ -2,9 +2,8 @@ package io.github.pfalencar.quarkussocial2.rest;
 
 import io.github.pfalencar.quarkussocial2.domain.model.Usuario;
 import io.github.pfalencar.quarkussocial2.domain.repository.UsuarioRepository;
-import io.github.pfalencar.quarkussocial2.rest.dto.CreateUsuarioRequest;
-import io.github.pfalencar.quarkussocial2.rest.dto.ResponseError;
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.github.pfalencar.quarkussocial2.rest.dto.request.CreateUsuarioRequest;
+import io.github.pfalencar.quarkussocial2.rest.dto.response.ResponseError;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 
 import javax.inject.Inject;
@@ -45,8 +44,8 @@ public class UsuarioResource {
         usuarioRepository.persist(usuario);
 
         return Response
-                .status(Response.Status.CREATED.getStatusCode())
-                .entity(usuario)
+                .status(Response.Status.CREATED.getStatusCode()) //se criou o usuário com sucesso,
+                .entity(usuario) //recebo um usuário com id
                 .build();
     }
     @GET
@@ -54,6 +53,7 @@ public class UsuarioResource {
         PanacheQuery<Usuario> query = usuarioRepository.findAll();
         return Response.ok(query.list()).build();
     }
+
     @DELETE
     @Path("{id}")
     @Transactional

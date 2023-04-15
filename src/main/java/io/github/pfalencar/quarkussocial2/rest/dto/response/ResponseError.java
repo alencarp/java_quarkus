@@ -1,5 +1,6 @@
-package io.github.pfalencar.quarkussocial2.rest.dto;
+package io.github.pfalencar.quarkussocial2.rest.dto.response;
 
+import io.github.pfalencar.quarkussocial2.rest.dto.FieldError;
 import lombok.Data;
 
 import javax.validation.ConstraintViolation;

@@ -4,9 +4,9 @@ import io.github.pfalencar.quarkussocial2.domain.model.Follower;
 import io.github.pfalencar.quarkussocial2.domain.model.Usuario;
 import io.github.pfalencar.quarkussocial2.domain.repository.FollowerRepository;
 import io.github.pfalencar.quarkussocial2.domain.repository.UsuarioRepository;
-import io.github.pfalencar.quarkussocial2.rest.dto.FollowerRequest;
-import io.github.pfalencar.quarkussocial2.rest.dto.FollowerResponse;
-import io.github.pfalencar.quarkussocial2.rest.dto.FollowersPerUsuarioResponse;
+import io.github.pfalencar.quarkussocial2.rest.dto.request.FollowerRequest;
+import io.github.pfalencar.quarkussocial2.rest.dto.response.FollowerResponse;
+import io.github.pfalencar.quarkussocial2.rest.dto.response.FollowersPerUsuarioResponse;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
