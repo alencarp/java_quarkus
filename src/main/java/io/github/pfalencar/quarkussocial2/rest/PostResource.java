@@ -57,11 +57,14 @@ public class PostResource {
     }
     @GET
     public Response listPosts(@PathParam("usuarioId") Long usuarioId, @HeaderParam("followerId") Long followerId){
+
+        //Teste 1 - Quando o id de usuario não é encontrado
         Usuario usuario = usuarioRepository.findById(usuarioId);
         if (usuario == null){
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
+        //Teste 2 - Quando o id do seguidor não foi enviado no header
         if(followerId == null) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
@@ -69,19 +72,23 @@ public class PostResource {
                     .build();
         }
 
+        //Teste 3 - Quando manda o seguidor no header, mas não existe esse seguidor.
+
         //um usuário só pode ver a lista de posts de um certo usuário, se aquele for seguidor deste:
         Usuario usuarioSeguidor = usuarioRepository.findById(followerId);
-
         if (usuarioSeguidor == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("followerId doesn't exist!").build();
         }
 
+        //Teste 4 - Quando o id de usuarioSeguidor não segue o usuario, e por isso não pode ver as postagens do outro.
         boolean isFollower = followerRepository.follows(usuarioSeguidor, usuario);
         if (!isFollower) {
             return Response.status(Response.Status.FORBIDDEN)
                     .entity("You can't see these posts").build(); //403
         }
 
+
+        //Teste 5 - Quando deu sucesso. Ele retorna as postagens do usuário.
         PanacheQuery<Post> postPanacheQuery = postRepository.find(
                 "usuario", Sort.by("dataTime", Sort.Direction.Descending),usuario);
         List<Post> listaDePosts = postPanacheQuery.list();
